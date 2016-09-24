@@ -25,13 +25,13 @@ or add the following to your `composer.json` file :
 Then register this service provider with Laravel :
 
 ```php
-'Roumen\Feed\FeedServiceProvider',
+Roumen\Feed\FeedServiceProvider::class,
 ```
 
 and add class alias :
 
 ```php
-'Feed' => 'Roumen\Feed\Feed',
+'Feed' => Roumen\Feed\Feed::class,
 ```
 
 Publish package views (OPTIONAL) :

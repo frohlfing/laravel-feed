@@ -7,10 +7,18 @@
     "authors": [
         {
             "name": "Roumen Damianoff",
-            "email": "roumen@dawebs.com",
+            "email": "roumen@crimsson.com",
             "role": "Developer",
             "homepage": "https://roumen.it"
-        }
+        },
+        [
+            {
+                "name": "Frank Rohlfing",
+                "email": "mail@frank-rohlfing.de",
+                "role": "Developer",
+                "homepage": "https://www.frank-rohlfing.de"
+            }
+        ]
     ],
     "require": {
         "php": ">=5.5.9",
