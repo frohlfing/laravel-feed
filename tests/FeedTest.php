@@ -15,38 +15,24 @@ class FeedTest extends Orchestra\Testbench\TestCase
     {
         $this->feed->title = 'TestTitle';
         $this->feed->description = 'TestDescription';
-        $this->feed->domain = 'http://roumen.it/';
         $this->feed->link = 'http://roumen.it/';
-        $this->feed->ref = 'hub';
         $this->feed->logo = "http://roumen.it/favicon.png";
         $this->feed->icon = "http://roumen.it/favicon.png";
         $this->feed->pubdate = '2014-02-29 00:00:00';
         $this->feed->lang = 'en';
-        $this->feed->copyright = 'All rights reserved by Foobar Corporation';
-        $this->feed->color = '00FF00';
-        $this->feed->cover = 'http://domain.tld/images/cover.png';
-        $this->feed->ga = 'UA-1525185-18';
-        $this->feed->related = false;
 
         $this->assertEquals('TestTitle', $this->feed->title);
         $this->assertEquals('TestDescription', $this->feed->description);
-        $this->assertEquals('http://roumen.it/', $this->feed->domain);
         $this->assertEquals('http://roumen.it/', $this->feed->link);
-        $this->assertEquals('hub', $this->feed->ref);
         $this->assertEquals("http://roumen.it/favicon.png", $this->feed->logo);
         $this->assertEquals("http://roumen.it/favicon.png", $this->feed->icon);
         $this->assertEquals('2014-02-29 00:00:00', $this->feed->pubdate);
         $this->assertEquals('en', $this->feed->lang);
-        $this->assertEquals('All rights reserved by Foobar Corporation', $this->feed->copyright);
-        $this->assertEquals('00FF00', $this->feed->color);
-        $this->assertEquals('http://domain.tld/images/cover.png', $this->feed->cover);
-        $this->assertEquals('UA-1525185-18', $this->feed->ga);
-        $this->assertEquals(false, $this->feed->related);
     }
 
     public function testFeedAdd()
     {
-        $this->feed->add('TestTitle', 'TestAuthor', 'TestUrl', '2014-02-29 00:00:00', '<p>TestResume</p>', '<p>TestContent</p>', ['url' => 'http://foobar.dev/someThing.jpg','type' => 'image/jpeg'], 'testCategory');
+        $this->feed->add('TestTitle', 'TestAuthor', 'TestUrl', '2014-02-29 00:00:00', '<p>TestResume</p>', '<p>TestContent</p>');
         $this->feed->add('TestTitle', 'TestAuthor', 'TestUrl', '2014-02-29 00:00:00', '<p>TestResume</p>');
 
         $items = $this->feed->getItems();
@@ -59,8 +45,6 @@ class FeedTest extends Orchestra\Testbench\TestCase
         $this->assertEquals('2014-02-29 00:00:00', $items[0]['pubdate']);
         $this->assertEquals('<p>TestResume</p>', $items[0]['description']);
         $this->assertEquals('<p>TestContent</p>', $items[0]['content']);
-        $this->assertEquals('http://foobar.dev/someThing.jpg', $items[0]['enclosure']['url']);
-        $this->assertEquals('testCategory', $items[0]['category']);
     }
 
     public function testFeedAddItem()
@@ -71,12 +55,10 @@ class FeedTest extends Orchestra\Testbench\TestCase
             'link' => 'TestUrl',
             'pubdate' => '2014-02-29 00:00:00',
             'description' => '<p>TestResume</p>',
-            'content' => '<p>TestContent</p>',
-            'category' => 'testCategory',
-            'enclosure' => ['url'=>'http://foobar.dev/someThing.jpg', 'type' => 'image/jpeg']
+            'content' => '<p>TestContent</p>'
         ]);
 
-       $this->feed->addItem([
+        $this->feed->addItem([
             'title' => 'TestTitle2',
             'author' => 'TestAuthor2',
             'link' => 'TestUrl2',
@@ -84,8 +66,8 @@ class FeedTest extends Orchestra\Testbench\TestCase
             'description' => '<p>TestResume2</p>'
         ]);
 
-       // add multidimensional array
-       $this->feed->addItem([
+        // add multidimensional array
+        $this->feed->addItem([
             [
                 'title' => 'TestTitle3',
                 'author' => 'TestAuthor3',
@@ -122,8 +104,6 @@ class FeedTest extends Orchestra\Testbench\TestCase
         $this->assertEquals('2014-02-29 00:00:00', $items[0]['pubdate']);
         $this->assertEquals('<p>TestResume</p>', $items[0]['description']);
         $this->assertEquals('<p>TestContent</p>', $items[0]['content']);
-        $this->assertEquals('http://foobar.dev/someThing.jpg', $items[0]['enclosure']['url']);
-        $this->assertEquals('testCategory', $items[0]['category']);
         $this->assertEquals('TestTitle5', $items[4]['title']);
     }
 
@@ -153,29 +133,4 @@ class FeedTest extends Orchestra\Testbench\TestCase
         $this->assertEquals('feed::atom', $this->feed->getView('atom'));
     }
 
-    public function testGetRssLinkByDefault()
-    {
-        $requestUrl = 'http://real.domain.need.to.be.hidden/test.xml';
-        $this->call('get', $requestUrl);
-
-        $reflectionMethod = new ReflectionMethod(Roumen\Feed\Feed::class, 'getRssLink');
-        $reflectionMethod->setAccessible(true);
-        $result = $reflectionMethod->invokeArgs($this->feed, []);
-
-        $this->assertEquals($requestUrl, $result);
-    }
-
-    public function testGetRssLinkWithDomainSetting()
-    {
-        $requestUrl = 'http://real.domain.need.to.be.hidden/test.xml';
-        $this->call('get', $requestUrl);
-
-        $this->feed->domain = 'http://rss.service.com/';
-
-        $reflectionMethod = new ReflectionMethod(Roumen\Feed\Feed::class, 'getRssLink');
-        $reflectionMethod->setAccessible(true);
-        $result = $reflectionMethod->invokeArgs($this->feed, []);
-
-        $this->assertEquals('http://rss.service.com/test.xml', $result);
-    }
 }

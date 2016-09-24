@@ -1,21 +1,13 @@
-<?php namespace Roumen\Feed;
+<?php
+
+namespace Roumen\Feed;
 
 use Illuminate\Support\ServiceProvider;
 
 class FeedServiceProvider extends ServiceProvider
 {
-
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
-
     /**
      * Bootstrap the application events.
-     *
-     * @return void
      */
     public function boot()
     {
@@ -28,13 +20,10 @@ class FeedServiceProvider extends ServiceProvider
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
     public function register()
     {
-        $this->app->bind('feed', function()
-        {
+        $this->app->bind('feed', function() {
             return new Feed();
         });
 
